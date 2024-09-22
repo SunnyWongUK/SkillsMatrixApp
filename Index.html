@@ -1,0 +1,1031 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+
+	<title>Skill Matrix App</title>
+
+	<link rel="stylesheet" href="./css/bootstrap.min.css" />
+	<link rel="stylesheet" href="./css/w3.css">
+	<script src="./lib/jquery/dist/jquery.min.js"></script>
+	<script src="./vue/vue.js"></script>
+	<script src="./js/Model.js?0"></script>
+	
+	<script src="/lib/xdlocalstorage/xdLocalStorage.min.js"></script>
+	<script src="/lib/xdlocalstorage/xdLocalStoragePostMessageApi.min.js"></script>
+
+	<style>
+		.header {
+			top: 5px;
+			left: 5px;
+			right: 100px;
+			bottom: 5px;
+			position: absolute;
+			/*width: 1300px;
+																			height: 50px;
+																			background-color: lightblue*/
+		}
+
+		.header1 {
+			top: 80px;
+			left: 5px;
+			right: 5px;
+			bottom: 5px;
+			width: 1300px;
+			height: 550px;
+			position: absolute
+		}
+
+		.header2 {
+			max-height: 100%;
+			overflow: auto
+		}
+
+		.progressContainer {
+			width: 100%;
+			height: 8px;
+			background: #ccc
+		}
+
+		.progressBar {
+			height: 8px;
+			background: #04AA6D;
+			width: 0%
+		}
+
+		body {
+			margin: 0;
+			font-family: Arial, Helvetica, sans-serif
+		}
+
+		label {
+			display: inline-block;
+			width: 150px;
+			text-align: right;
+		}
+
+		input, select {
+			display: inline-block;
+			width: 150px;
+		}
+
+		.field {
+			display: inline-block;
+			width: 300px;
+		}
+
+		table {
+			font-family: arial, sans-serif;
+			border-collapse: collapse;
+			width: 100%
+		}
+
+		td, th {
+			border: 0px solid #dddddd;
+			text-align: left;
+			padding: 8px
+		}
+
+		tr:nth-child(even) {
+			background-color: lightblue
+		}
+
+		.progressContainer {
+			width: 100%;
+			height: 8px;
+			background: #ccc
+		}
+
+		.progressBar {
+			height: 8px;
+			background: #04AA6D;
+			width: 0%
+		}
+
+		.margin {
+			margin-top: 5px;
+			margin-left: 5px;
+			margin-right: 5px;
+			margin-bottom: 5px
+		}
+
+		.margin20 {
+			margin-top: 20px;
+			margin-left: 20px;
+			margin-right: 20px;
+			margin-bottom: 20px
+		}
+
+		.center {
+			margin: 0;
+			position: absolute;
+			top: 390px;
+			left: 50%;
+			-ms-transform: translate(-50%, -50%);
+			transform: translate(-50%, -50%);
+		}
+
+		.dashboardBreakdown {
+			margin-top: 500px;
+		}
+
+		.position15Percentage {
+			position: relative;
+			left: 16%;
+			margin-right: 17%
+		}
+
+		#backBtn {
+			display: none;
+			position: fixed;
+			bottom: 20px;
+			right: 30px;
+			z-index: 99;
+			font-size: 18px;
+			border: none;
+			outline: none;
+			background-color: red;
+			color: white;
+			cursor: pointer;
+			padding: 15px;
+			border-radius: 4px
+		}
+
+			#backBtn:hover {
+				background-color: #555
+			}
+
+		.searchTextSize {
+			width: 234px;
+			/*height: 200px;*/
+		}
+
+		.imageSize {
+			object-fit: fill;
+			width: 30px;
+			height: 30px;
+			border: 1px solid #ddd;
+		}
+
+		.imageSize1 {
+			object-fit: fill;
+			width: 30px;
+			height: 30px;
+			margin-top: 0px;
+			margin-left: 0px;
+			margin-right: 0px;
+			margin-bottom: -10px
+			/*border: 1px solid #ddd;*/
+		}
+
+		#filterImage {
+			object-fit: fill;
+			width: 30px;
+			height: 30px;
+			border: 1px solid #ddd;
+		}
+
+		#overlaySearch {
+			position: fixed;
+			background-color: #fed9ff;
+			/*background-color: rgba(0,0,0,0.5);*/
+			width: 1000px;
+			height: 600px;
+			z-index: 2;
+			cursor: pointer;
+			overflow-x: hidden;
+			overflow-y: scroll;
+		}
+
+		#overlay {
+			position: fixed;
+			background-color: #fed9ff;
+			/*background-color: rgba(0,0,0,0.5);*/
+			width: 350px;
+			height: 517px;
+			z-index: 2;
+			cursor: pointer;
+			overflow-x: hidden;
+			overflow-y: scroll;
+		}
+
+		.scrolldiv {
+			border: #c0c0c0 solid 1px;
+			display: inline-block;
+			width: 100px;
+			height: 200px;
+			position: relative;
+			/*font-family: arial, helvetica, sans serif;
+																			font-size: .725em;*/
+			overflow-y: scroll;
+			margin-top: 5px;
+			margin-left: 5px;
+			margin-right: 5px;
+			margin-bottom: 5px;
+		}
+
+		.checkitem {
+			display: block
+		}
+
+		.important {
+			text-align: left !important;
+			width: 280px !important;
+		}
+
+		.desWidth {
+			width: 300px !important;
+		}
+
+	</style>
+</head>
+
+<body>
+	<div class="w3-sidebar w3-light-blue w3-bar-block" style="width:15%">
+		<h3 class="w3-bar-item">Skills Matrix</h3>
+		<a class="w3-bar-item w3-button" href="#!addPeopleSkill" onclick="Model.ShowSection('AddPeopleSkill', 'PeopleSkillDto')">Edit People Skills</a>
+		<a class="w3-bar-item w3-button" href="#!viewPeopleSkill" onclick="Model.ShowSection('ViewPeopleSkill', 'PeopleSkillDto')">View People Skills</a>
+		<a class="w3-bar-item w3-button" href="#!add" onclick="Model.ShowSection('Dashboard', 'DashboardDto')">Dashboards</a>
+		<div class="w3-dropdown-hover">
+			<a class="w3-button" href="javascript:void(0)">Set-Up<i class="fa fa-caret-down"></i></a>
+			<div class="w3-dropdown-content w3-bar-block w3-card-4">
+				<a class="w3-bar-item w3-button" href="#!view" onclick="Model.ShowSection('ViewFunctionTask', 'FunctionTaskDto')">Function Activity Maintenance</a>
+				<a class="w3-bar-item w3-button" href="#!view" onclick="Model.ShowSection('View', 'ProductTaskDto')">Product Activity Maintenance</a>
+				<a class="w3-bar-item w3-button" href="#!view" onclick="Model.ShowSection('View', 'ProductActivityDto')">Activity Maintenance</a>
+				<a class="w3-bar-item w3-button" href="#!view" onclick="Model.ShowSection('View', 'ProductDto')">Product Maintenance</a>
+				<a class="w3-bar-item w3-button" href="#!view" onclick="Model.ShowSection('View', 'PeopleDto')">People Maintenance</a>
+				<a class="w3-bar-item w3-button" href="#!view" onclick="Model.ShowSection('View', 'RoleDto')">Role Maintenance</a>
+				<a class="w3-bar-item w3-button" href="#!view" onclick="Model.ShowSection('View', 'DepartmentDto')">Department Maintenance</a>
+				<a class="w3-bar-item w3-button" href="#!view" onclick="Model.ShowSection('View', 'FunctionDto')">Function Maintenance</a>
+				<a class="w3-bar-item w3-button" href="#!view" onclick="Model.ShowSection('View', 'DivisionDto')">Division Maintenance</a>
+				<a class="w3-bar-item w3-button" href="#!view" onclick="Model.ShowSection('View', 'ScoringDto')">Scoring Maintenance</a>
+			</div>
+		</div>
+	</div>
+
+	<div id="dashboardDetail" class="position15Percentage" style="display:none">
+
+		<h3>Dashboard Detail</h3>
+
+		<div id="viewDashboardDetail" class="panel panel-primary">
+
+			<input id="btnGet" class="btn btn-primary" type="button" value="Back" onclick="Model.ShowSection('Dashboard', 'DashboardDto')" />
+			<br /><br />
+			<div class="panel-heading">
+				View Dashboard Detail
+			</div>
+			<div class="panel-body">
+				<table id="dashboardDetailTable" class="table table-bordered">
+					<tr>
+						<th id="peopleFocalPointRef">People Ref</th>
+						<th id="forename">Forename</th>
+						<th id="surname">Surname</th>
+						<th id="divisionDescription">Division</th>
+						<th id="functionDescription">Function</th>
+						<th id="roleDescription">Role</th>
+						<th id="productDescription">Product</th>
+						<th id="productActivityDescription">Activity</th>
+						<th id="scoringDescription">Scoring</th>
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+	<div id="dashboard" class="position15Percentage" style="display:none">
+
+		<h3>Dashboards</h3>
+
+		<div id="dashboard" class="panel panel-primary">
+			<br />
+
+			<label for="dashboardCategory">Category:</label>
+			<select id="dashboardCategory" name="categoryDashboard" class="field desWidth" value="LowestSkillForTop10Activities" style="height:30px">
+				<option value="LowestSkillForTop10Activities">Lowest Skill for Top 10 Activities</option>
+				<option value="LowestHeadCountForTop10Activities">Lowest Head Count for Top 10 Activities</option>
+				<option value="LowestAverageSkillForTop10Activities">Lowest Average Skill for Top 10 Activities</option>
+				<option value="LowestSkillForTop10Functions">Lowest Skill for Top 10 Functions</option>
+				<option value="SkillRequiredForRoles">Skill Required for Roles</option>
+				<option value="SinglePointOfFailureForFunctions">Single Point of Failure for Functions</option>
+			</select>
+
+			<label for="dashboardDivision">Division:</label>
+			<select id="dashboardDivision" name="dashboardDivision" class="desWidth" style="height:30px">
+			</select>
+
+			<label for="dashboardFunction">Function:</label>
+			<select id="dashboardFunction" name="dashboardFunction" class="desWidth" style="height:30px">
+			</select>
+
+			<label for="dashboardDepartment" style="display:none">Department:</label>
+			<select id="dashboardDepartment" name="dashboardDepartment" class="desWidth" style="display:none; height:30px">
+			</select>
+
+			<label for="dashboardPeople" style="display:none">People:</label>
+			<select id="dashboardPeople" name="dashboardPeople" class="desWidth" style="display:none; height:30px">
+			</select>
+
+			<br />
+			<label for="dashboardProduct">Product:</label>
+			<select id="dashboardProduct" name="dashboardProduct" class="desWidth" style="height:30px">
+			</select>
+
+			<label for="dashboardProductActivity" style="display:none">Activity:</label>
+			<select id="dashboardProductActivity" name="dashboardProductActivity" class="desWidth" style="display:none; height:30px">
+			</select>
+
+			<input id="btnCalculateDashboard" class="btn btn-primary" type="button" value="Calculate" v-on:click="calculateDashboard" />
+			<br />
+
+			<label id="dashboardResult" style="width:1000px; text-align:left"></label>
+		</div>
+
+		<table>
+			<tr>
+				<td><img id="imgResult1" class="center" style="display:none" src="" alt="" width="450" height="450"></td>
+				@*<td><img id="imgResult1" class="center" style="display:none" src="" alt="" width="520" height="520"></td>*@
+
+				@*<td><img id="imgResult2" class="center" style="display:none" src="" alt="" width="350" height="350"></td>*@
+				@*<td><img id="imgResult2" style="display:none" src="" alt="" width="500" height="500"></td>*@
+
+				@*<td><img id="imgResult3" style="display:none" src="" alt="" width="500" height="500"></td>*@
+			</tr>
+		</table>
+
+		<br />
+		<div class="panel-body">
+			@*<table id="dashboardBreakdown" class="table table-bordered">*@
+
+			<table id="dashboardBreakdown" class="table table-bordered" style="margin-top:400px">
+			@*<table id="dashboardBreakdown" class="table table-bordered" style="margin-top:490px">*@
+
+			</table>
+		</div>
+
+	</div>
+
+	<div id="addPeopleSkill" class="position15Percentage" style="display:none">
+
+		<h3>Edit People Skills</h3>
+
+		<div id="addPeopleSkill" class="panel panel-primary">
+			<br />
+			<input id="btnAddPeopleSkill" class="btn btn-primary" type="button" value="Save" onclick="Model.AddPeopleSkill1(Model.UpdatePeopleSkillTable)" />
+			<input id="btnClearPeopleSkill" class="btn btn-primary" type="button" value="Clear" style="display:none" onclick="Model.UpdatePeopleSkillTable([])" />
+			<br /><br />
+
+			<label for="people3">People:</label>
+
+			<select id="people3" name="people3" class="desWidth" onchange="Model.AddPeopleSkillChangePeople();" style="height:30px; display:none">
+			</select>
+			<input id="peopleText3" name="peopleText3" class="desWidth" type="text">
+
+			<input id="searchImage" class="imageSize1" type="image" src="/css/search.jpg" onclick="Model.SearchImage(this, 'viewPeople', 'viewPeopleSkill', 1, 'people3')" />
+			<br><br>
+
+			<label for="function3">Function:</label>
+			<input id="function3" name="function3" class="desWidth" type="text" disabled><br><br>
+
+			<label for="product3">Product:</label>
+			<select id="product3" name="product3" class="desWidth" onchange="Model.AddPeopleSkillChangeProduct(Model.UpdatePeopleSkillTable)" style="height:30px">
+			</select><br><br>
+
+			<label for="isActive3">Is Active:</label>
+			<input id="isActive3" name="isActive" type="checkbox" value="isActive3" checked><br><br>
+
+			<label id="addPeopleSkillResult" style="width:1000px; text-align:left"></label>
+
+			<div class="panel-body">
+				<table id="addPeopleSkillTable" class="table table-bordered">
+					<tr>
+						<th id="id" style="display:none">Id</th>
+						<th id="productActivityCode">Activity</th>
+						<th id="productActivityDescription">Description</th>
+						<th id="scoringCode1">Scoring</th>
+					</tr>
+					<tr onclick="Model.Highlight(this)" v-for="a in appData">
+						@*<td style="display:none">{{a.id}}</td>
+						<td>{{a.productActivityCode}}</td>
+						<td>{{a.productActivityDescription}}</td>*@
+
+						@*<td>*@
+						@*<select id="scoring3" name="scoring3" value="0" style="height:30px">*@
+						@*<td><select id="scoring3" name="scoring3" v-show="a != null" v-if="a != null" v-model="a.scoringCode">*@
+						@*<option value="0">0</option>
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>*@
+						@*</select>*@
+						@*</td>*@
+
+						@*<td><input id="scoring3" name="scoring3" type="text" v-show="a != null" v-if="a != null" v-model="a.scoringCode" onkeypress="return Model.IsNumberKey(this,event);"></td>*@
+
+					</tr>
+				</table>
+			</div>
+
+		</div>
+
+	</div>
+
+	<div id="updatePeopleSkill" class="position15Percentage" style="display:none">
+	</div>
+
+	<div id="viewPeopleSkill" class="position15Percentage" style="display:none">
+
+		<h3>View People Skills</h3>
+
+		<div id="viewPeopleSkill" class="panel panel-primary">
+			<br />
+			<label for="fromDate" style="display:none">From Date:</label>
+			<input id="fromDate" name="fromDate" type="date" style="display:none">@*<br><br>*@
+			<label for="toDate" style="display:none">To Date:</label>
+			<input id="toDate" name="toDate" type="date" style="display:none">@*<br><br>*@
+
+			<input id="btnGet" class="btn btn-primary" type="button" value="Refresh" onclick="Model.RetrievePeopleSkill()" />
+			@*<input id="btnGet" class="btn btn-primary" type="button" value="Refresh" v-on:click="view" />*@
+			<br /><br />
+			<div class="panel-heading">
+				View People Skills
+			</div>
+			<div class="panel-body">
+				<table id="peopleSkillTable" class="table table-bordered">
+					<tr>
+						<th style="display:none">Id</th>
+						<th>People Ref<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 1, 'People Ref', 'People')" /></th>
+
+						@*<th>Forename</th>
+						<th>Surname</th>*@
+
+						<th>Forename<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 2, 'Forename', '')" /></th>
+						<th>Surname<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 3, 'Surname', '')" /></th>
+
+						<th>Division<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 4, 'Division', 'Division')" /></th>
+						<th>Function<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 5, 'Function', 'Function')" /></th>
+						<th>Role<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 6, 'Role', 'Role')" /></th>
+						<th>Product<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 7, 'Product', 'Product')" /></th>
+						<th>Activity<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 8, 'Product Activity', 'ProductActivity')" /></th>
+						<th>Scoring<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 9, 'Scoring', 'Scoring')" /></th>
+						@*<th>Created Date<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 10, 'Created Date', '')" /></th>
+						<th>Created By<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 11, 'Created By', '')" /></th>
+						@*<th>Modified Date<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 10, 'Modified Date', '')" /></th>*@
+						@*<th>Modified By<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 11, 'Modified By', '')" /></th>*@
+					</tr>
+					<tr onclick="Model.Highlight(this)">
+						@*<tr onclick="Model.Highlight(this)" v-for="a in appData">*@
+						@*<td style="display:none">{{a.id}}</td>
+						<td>{{a.peopleFocalPointRef}}</td>
+						<td>{{a.forename}}</td>
+						<td>{{a.surname}}</td>
+						<td>{{a.divisionCode}}</td>
+						<td>{{a.functionCode}}</td>
+						<td>{{a.roleCode}}</td>
+						<td>{{a.productCode}}</td>
+						<td>{{a.productActivityCode}}</td>
+						<td>{{a.scoringCode}}</td>
+						<td>{{a.createdDate}}</td>
+						<td>{{a.createdBy}}</td>
+						<td>{{a.modifiedDate}}</td>
+						<td>{{a.modifiedBy}}</td>*@
+					</tr>
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+	<div id="viewPeople" class="position15Percentage" style="display:none">
+
+		<h3 id="viewPeopleTitle">People Maintenance</h3>
+
+		<div id="viewPeople" class="panel panel-primary">
+			<br />
+			<label for="fromDate2" style="display:none">From Date:</label>
+			<input id="fromDate2" name="fromDate2" type="date" style="display:none">@*<br><br>*@
+			<label for="toDate2" style="display:none">To Date:</label>
+			<input id="toDate2" name="toDate2" type="date" style="display:none">@*<br><br>*@
+
+			<input id="btnAddPeople" class="btn btn-primary" type="button" value="Add" onclick="Model.ShowSection('AddPeople', 'PeopleDto')" />
+			<input id="btnRetrievePeople" class="btn btn-primary" type="button" value="Refresh" style="display:none" onclick="Model.RetrievePeoples(Model.PeopleJsonToTable)" />
+			@*<input id="btnRetrievePeople" class="btn btn-primary" type="button" value="Refresh" style="display:none" v-on:click="view" />*@
+			<input id="btnSelectPeople" class="btn btn-primary" type="button" style="display:none" value="Select" onclick="Model.TableRowDoubleClick('viewPeopleTable')" />
+			<br /><br />
+			<div id="viewPeopleTitle1" class="panel-heading">
+				View People
+			</div>
+			<div class="panel-body">
+				<table id="viewPeopleTable" class="table table-bordered">
+					<tr>
+						<th id="id" style="display:none">Id</th>
+
+						@*<th>Focal Point Ref</th>
+						<th>Forename</th>
+						<th>Surname</th>*@
+
+						<th id="focalPointRef">Focal Point Ref<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 1, 'FocalPointRef', '')" /></th>
+						<th id="forename">Forename<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 2, 'Forename', '')" /></th>
+						<th id="surname">Surname<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 3, 'Surname', '')" /></th>
+
+						<th id="isActive">Is Active</th>
+
+						@*<th>Created Date</th>
+						<th>Created By</th>
+						<th>Modified Date</th>
+						<th>Modified By</th>*@
+					</tr>
+					<tr onclick="Model.Highlight(this)" ondblclick="Model.TableRowDoubleClick('viewPeopleTable')" v-for="a in appData">
+						@*<td style="display:none">{{a.id}}</td>
+						<td style="cursor:pointer" onclick="Model.ShowUpdateSection(this, 'UpdatePeople')"><u>{{a.focalPointRef}}</u></td>
+						<td>{{a.forename}}</td>
+						<td>{{a.surname}}</td>
+						<td><input type="checkbox" onclick="return false;" v-show="a != null" v-if="a != null" v-model="a.isActive"></td>*@
+
+						@*<td>{{a.createdDate}}</td>
+						<td>{{a.createdBy}}</td>
+						<td>{{a.modifiedDate}}</td>
+						<td>{{a.modifiedBy}}</td>*@
+					</tr>
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+	<div id="addProductTask" class="position15Percentage" style="display:none">
+
+		<h3 id="addProductTaskTitle">Add Product Activity</h3>
+
+		<div id="addProductTask" class="panel panel-primary">
+			<br />
+			<input id="btnAddProductTask" class="btn btn-primary" type="button" value="Add" onclick="Model.Add1(Model.AddResult)" />
+			<input id="btnBackProductTask" class="btn btn-primary" type="button" value="Back" onclick="Model.ShowSection('View', window.currentDto)" />
+			<br /><br />
+
+			<label id="productTaskProductLabel" for="productTaskProduct">Product:</label>
+			<select id="productTaskProduct" name="productTaskProduct" class="desWidth" style="height:30px; margin-left:5px">
+			</select><br><br>
+
+			<label id="productTaskProductActivityLabel" for="productTaskProductActivity">Product Activity:</label>
+
+			<select id="productTaskProductActivity" name="productTaskProductActivity" class="desWidth" style="height:30px; margin-left:5px; display:none">
+			</select>
+			<input id="productTaskProductActivityText" name="productTaskProductActivityText" class="desWidth" type="text" style="margin-left:5px">
+
+			<input id="productTaskSearchImage" class="imageSize1" type="image" src="/css/search.jpg" onclick="Model.SearchImage(this, 'viewProductActivity', 'viewPeople', 2, 'productTaskProductActivity')" />
+			<br><br>
+
+			<label for="productTaskIsActiveLabel">Is Active:</label>
+			<input id="productTaskIsActive" name="productTaskIsActive" type="checkbox" value="productTaskIsActive" style="margin-left:5px" checked><br><br>
+
+			<label id="productTaskResult" style="width:1000px; text-align:left"></label>
+		</div>
+
+	</div>
+
+	<div id="updateProductTask" class="position15Percentage" style="display:none">
+
+		<h3 id="updateProductTaskTitle">Update Product Activity</h3>
+
+		<div id="updateProductTask" class="panel panel-primary">
+			<br />
+			<input id="btnUpdateProductTask1" class="btn btn-primary" type="button" value="Update" onclick="Model.Update1(Model.UpdateResult)" />
+			<input id="btnBackProductTask1" class="btn btn-primary" type="button" value="Back" onclick="Model.ShowSection('View', window.currentDto)" />
+			<br /><br />
+
+			<input id="productTaskId1" name="productTaskId1" style="display:none" type="text">
+
+			<label id="productTaskProductLabel1" for="productTaskProduct1">Product:</label>
+			<select id="productTaskProduct1" name="productTaskProduct1" class="desWidth" style="height:30px; margin-left:5px">
+			</select><br><br>
+
+			<label id="productTaskProductActivityLabel1" for="productTaskProductActivity1">Product Activity:</label>
+
+			<select id="productTaskProductActivity1" name="productTaskProductActivity1" class="desWidth" style="height:30px; margin-left:5px; display:none">
+			</select>
+			<input id="productTaskProductActivityText1" name="productTaskProductActivityText1" class="desWidth" type="text" style="margin-left:5px">
+
+			<input id="productTaskSearchImage1" class="imageSize1" type="image" src="/css/search.jpg" onclick="Model.SearchImage(this, 'viewProductActivity', 'addProductTask', 2, 'productTaskProductActivity1')" />
+			<br><br>
+
+			<label for="productTaskIsActiveLabel1">Is Active:</label>
+			<input id="productTaskIsActive1" name="productTaskIsActive1" type="checkbox" value="productTaskIsActive1" style="margin-left:5px"><br><br>
+
+			<label id="productTaskResult1" style="width:1000px; text-align:left"></label>
+		</div>
+
+	</div>
+
+	<div id="viewProductTask" class="position15Percentage" style="display:none">
+
+		<h3 id="viewProductTaskTitle">Product Activity Maintenance</h3>
+
+		<div id="viewProductTask" class="panel panel-primary">
+			<br />
+			<label for="fromDate3" style="display:none">From Date:</label>
+			<input id="fromDate3" name="fromDate3" type="date" style="display:none">@*<br><br>*@
+			<label for="toDate3" style="display:none">To Date:</label>
+			<input id="toDate3" name="toDate3" type="date" style="display:none">@*<br><br>*@
+
+			<input id="btnAddProductTask" class="btn btn-primary" type="button" value="Add" onclick="Model.ShowSection('AddProductTask', 'ProductTaskDto')" />
+			<input id="btnRetrieveProductTask" class="btn btn-primary" type="button" value="Refresh" style="display:none" v-on:click="view" />
+			<br /><br />
+			<div id="viewProductTaskTitle1" class="panel-heading">
+				View Product Activity
+			</div>
+			<div class="panel-body">
+				<table id="viewProductTaskTable" class="table table-bordered">
+					<tr>
+						<th style="display:none">Id</th>
+						<th>Product</th>
+						<th>Activity</th>
+						<th>Is Active</th>
+						@*<th>Created Date</th>
+						<th>Created By</th>
+						<th>Modified Date</th>
+						<th>Modified By</th>*@
+					</tr>
+					<tr onclick="Model.Highlight(this)" v-for="a in appData">
+						<td style="display:none">{{a.id}}</td>
+						<td style="cursor:pointer" onclick="Model.ShowUpdateSection(this, 'UpdateProductTask')"><u>{{a.productDescription}}</u></td>
+						<td>{{a.productActivityDescription}}</td>
+						<td><input type="checkbox" onclick="return false;" v-show="a != null" v-if="a != null" v-model="a.isActive"></td>
+						@*<td>{{a.createdDate}}</td>
+						<td>{{a.createdBy}}</td>
+						<td>{{a.modifiedDate}}</td>
+						<td>{{a.modifiedBy}}</td>*@
+					</tr>
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+	<div id="addFunctionTask" class="position15Percentage" style="display:none">
+
+		<h3 id="addFunctionTaskTitle">Bulk Edit Function Activity</h3>
+
+		<div id="addFunctionTask1" class="panel panel-primary">
+			<br />
+			<input id="btnBulkEditFunctionTask" class="btn btn-primary" type="button" value="Save" v-on:click="bulkEdit" disabled />
+			<input id="btnBackFunctionTask" class="btn btn-primary" type="button" value="Back" onclick="Model.ShowSection('ViewFunctionTask', 'FunctionTaskDto')" />
+			<input id="btnClearFunctionTask" class="btn btn-primary" type="button" value="Clear" style="display:none" v-on:click="clearUpAppData" />
+			<br /><br />
+
+			<label id="functionTaskFunctionLabel" for="functionTaskFunction">Function:</label>
+			<select id="functionTaskFunction" name="functionTaskFunction" class="desWidth" style="height:30px" v-on:change="changeFunction">
+			</select><br><br>
+
+			<label for="functionTaskIsRetrieveDefaultFunctionTask">Is Use Template:</label>
+			<input id="functionTaskIsRetrieveDefaultFunctionTask" name="functionTaskIsRetrieveDefaultFunctionTask" type="checkbox" value="functionTaskIsRetrieveDefaultFunctionTask" checked disabled><br><br>
+
+			<label id="functionTaskProductLabel" for="functionTaskProduct">Product:</label>
+			<select id="functionTaskProduct" name="functionTaskProduct" class="desWidth" v-on:change="changeProduct" style="height:30px" disabled>
+			</select><br><br>
+
+			<label id="functionTaskProductActivityLabel" for="functionTaskProductActivity">Activity:</label>
+
+			<select id="functionTaskProductActivity" name="functionTaskProductActivity" class="desWidth" style="height:30px; display:none" disabled>
+			</select>
+			<input id="functionTaskProductActivityText" name="functionTaskProductActivityText" class="desWidth" type="text" disabled>
+
+			<input id="functionTaskSearchImage" class="imageSize1" type="image" src="/css/search.jpg" onclick="Model.SearchImage(this, 'viewProductActivity', 'addFunctionTask', 2, 'functionTaskProductActivity')" disabled />
+			<input id="btnAddFunctionTaskProductActivity" class="btn btn-primary" type="button" value="Add Activity" v-on:click="addProductActivity" disabled />
+			<br><br>
+
+			<label for="functionTaskIsActive">Is Active:</label>
+			<input id="functionTaskIsActive" name="functionTaskIsActive" type="checkbox" value="functionTaskIsActive" checked disabled><br><br>
+
+			<label id="functionTaskResult" style="width:1000px; text-align:left"></label>
+
+			<br />
+			<input id="btnDeleteFunctionTask" class="btn btn-primary" type="button" value="Delete" v-on:click="deleteFunctionTask" disabled />
+			@*<input id="btnDeleteFunctionTask" class="btn btn-primary" type="button" value="Delete" v-on:click="delete" />*@
+			<br />
+
+			<div class="panel-body">
+				<table id="addFunctionTaskTable" class="table table-bordered">
+					<tr>
+						<th style="display:none">Id</th>
+						<th>Activity</th>
+						<th>Description</th>
+					</tr>
+					<tr onclick="Model.Highlight(this)" v-for="a in appData">
+						<td style="display:none">{{a.id}}</td>
+						<td>{{a.productActivityCode}}</td>
+						<td>{{a.productActivityDescription}}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+	<div id="updateFunctionTask" class="position15Percentage" style="display:none">
+	</div>
+
+	<div id="viewFunctionTask" class="position15Percentage" style="display:none">
+
+		<h3 id="viewFunctionTaskTitle">Function Activity Maintenance</h3>
+
+		<div id="viewFunctionTask" class="panel panel-primary">
+			<br />
+			<label for="fromDate4" style="display:none">From Date:</label>
+			<input id="fromDate4" name="fromDate4" type="date" style="display:none">@*<br><br>*@
+			<label for="toDate4" style="display:none">To Date:</label>
+			<input id="toDate4" name="toDate4" type="date" style="display:none">@*<br><br>*@
+
+			<input id="btnBulkEdit" class="btn btn-primary" type="button" value="Bulk Edit" onclick="Model.ShowSection('AddFunctionTask', 'FunctionTaskDto')" />
+			<input id="btnRetrieveFunctionTask" class="btn btn-primary" type="button" value="Refresh" style="display:none" v-on:click="view" />
+			<br /><br />
+			<div id="viewFunctionTaskTitle1" class="panel-heading">
+				View Function Activity
+			</div>
+			<div class="panel-body">
+				<table id="viewFunctionTaskTable" class="table table-bordered">
+					<tr>
+						<th style="display:none">Id</th>
+						<th>Function</th>
+						<th>Product</th>
+						<th>Activity</th>
+						<th>Is Active</th>
+						@*<th>Created Date</th>
+						<th>Created By</th>
+						<th>Modified Date</th>
+						<th>Modified By</th>*@
+					</tr>
+					<tr onclick="Model.Highlight(this)" v-for="a in appData">
+						<td style="display:none">{{a.id}}</td>
+						<td>{{a.functionDescription}}</td>
+						@*<td style="cursor:pointer" onclick="Model.ShowUpdateSection(this, 'UpdateFunctionTask')"><u>{{a.functionCode}}</u></td>*@
+						<td>{{a.productDescription}}</td>
+						<td>{{a.productActivityDescription}}</td>
+						<td><input type="checkbox" onclick="return false;" v-show="a != null" v-if="a != null" v-model="a.isActive"></td>
+						@*<td>{{a.createdDate}}</td>
+						<td>{{a.createdBy}}</td>
+						<td>{{a.modifiedDate}}</td>
+						<td>{{a.modifiedBy}}</td>*@
+					</tr>
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+	<div id="viewProductActivity" class="position15Percentage" style="display:none">
+
+		<h3 id="viewProductActivityTitle">Activity Maintenance</h3>
+
+		<div id="viewProductActivity" class="panel panel-primary">
+			<br />
+			<label for="fromDate5" style="display:none">From Date:</label>
+			<input id="fromDate5" name="fromDate2" type="date" style="display:none">@*<br><br>*@
+			<label for="toDate5" style="display:none">To Date:</label>
+			<input id="toDate5" name="toDate2" type="date" style="display:none">@*<br><br>*@
+
+			<input id="btnAddProductActivity" class="btn btn-primary" type="button" value="Add" onclick="Model.ShowSection('AddProductActivity', 'ProductActivityDto')" />
+			<input id="btnRetrieveProductActivity" class="btn btn-primary" type="button" value="Refresh" style="display:none" onclick="Model.RetrieveProductActivities(Model.ProductActivityJsonToTable)" />
+			<input id="btnSelectProductActivity" class="btn btn-primary" type="button" style="display:none" value="Select" onclick="Model.TableRowDoubleClick('viewProductActivityTable')" />
+			<br /><br />
+			<div id="viewProductActivityTitle1" class="panel-heading">
+				View Activity
+			</div>
+			<div class="panel-body">
+				<table id="viewProductActivityTable" class="table table-bordered">
+					<tr>
+						<th id="id" style="display:none">Id</th>
+
+						<th id="code">Code<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 1, 'Code', '')" /></th>
+						<th id="description">Description<input id="filterImage" type="image" src="/css/filter.jpg" style="float: right" onclick="Model.FilterImage(this, 2, 'Description', '')" /></th>
+						<th id="isActive">Is Active</th>
+					</tr>
+					<tr onclick="Model.Highlight(this)" ondblclick="Model.TableRowDoubleClick('viewProductActivityTable')">
+					</tr>
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+	<div id="add" class="position15Percentage" style="display:none">
+
+		<h3 id="addTitle">Add Scoring</h3>
+
+		<div id="add" class="panel panel-primary">
+			<br />
+			<input id="btnAdd" class="btn btn-primary" type="button" value="Add" v-on:click="add" />
+			<input id="btnBack" class="btn btn-primary" type="button" value="Back" onclick="Model.ShowSection('View', window.currentDto)" />
+			<br /><br />
+
+			<label id="codeLabel" for="code">Code:</label>
+			<select id="code" name="code" class="desWidth" style="height:30px; margin-left:5px">
+			</select><br><br>
+
+			<label id="descriptionLabel" for="description">Description:</label>
+			<input id="description" name="description" class="desWidth" type="text"><br><br id="descriptionBreak">
+			@*<input id="description" name="description" class="desWidth" type="text" style="margin-left:5px"><br><br id="descriptionBreak">*@
+
+			<label for="isActive">Is Active:</label>
+			<input id="isActive" name="isActive" type="checkbox" value="isActive" style="margin-left:5px" checked><br><br>
+
+			<label id="result" style="width:1000px; text-align:left"></label>
+		</div>
+
+	</div>
+
+	<div id="update" class="position15Percentage" style="display:none">
+
+		<h3 id="updateTitle">Update Scoring</h3>
+
+		<div id="update" class="panel panel-primary">
+			<br />
+			<input id="btnUpdate" class="btn btn-primary" type="button" value="Update" v-on:click="update" />
+			<input id="btnBack" class="btn btn-primary" type="button" value="Back" onclick="Model.ShowSection('View', window.currentDto)" />
+			<br /><br />
+
+			<input id="id1" name="id1" style="display:none" type="text">
+
+			<label id="codeLabel1" for="code1">Code:</label>
+			<select id="code1" name="code" class="desWidth" style="height:30px; margin-left:5px">
+			</select><br><br>
+
+			<label id="descriptionLabel1" for="description1">Description:</label>
+			<input id="description1" name="description1" class="desWidth" type="text"><br><br id="descriptionBreak1">
+			@*<input id="description1" name="description1" class="desWidth" type="text" style="margin-left:5px"><br><br id="descriptionBreak1">*@
+
+			<label for="isActive1">Is Active:</label>
+			<input id="isActive1" name="isActive1" type="checkbox" value="isActive1" style="margin-left:5px"><br><br>
+
+			<label id="result1" style="width:1000px; text-align:left"></label>
+		</div>
+
+	</div>
+
+	<div id="view" class="position15Percentage" style="display:none">
+
+		<h3 id="viewTitle">Scoring Maintenance</h3>
+
+		<div id="view" class="panel panel-primary">
+			<br />
+			<label for="fromDate1" style="display:none">From Date:</label>
+			<input id="fromDate1" name="fromDate1" type="date" style="display:none">@*<br><br>*@
+			<label for="toDate1" style="display:none">To Date:</label>
+			<input id="toDate1" name="toDate1" type="date" style="display:none">@*<br><br>*@
+
+			<input id="btnAdd" class="btn btn-primary" type="button" value="Add" onclick="Model.ShowSection('Add', window.currentDto)" />
+			<input id="btnRetrieve" class="btn btn-primary" type="button" value="Refresh" style="display:none" v-on:click="view" />
+			<br /><br />
+			<div id="viewTitle1" class="panel-heading">
+				View Scoring
+			</div>
+
+			<div class="panel-body">
+
+				<table id="viewTable" class="table table-bordered">
+					<tr>
+						<th style="display:none">Id</th>
+
+						<th>Code</th>
+						<th>Description</th>
+						<th>Is Active</th>
+						@*<th>Created Date</th>
+						<th>Created By</th>
+						<th>Modified Date</th>
+						<th>Modified By</th>*@
+					</tr>
+
+					<tr onclick="Model.Highlight(this)" v-for="a in appData">
+						<td style="display:none">{{a.id}}</td>
+						<td style="cursor:pointer" onclick="Model.ShowUpdateSection(this, 'Update')"><u>{{a.code}}</u></td>
+						<td>{{a.description}}</td>
+						<td><input type="checkbox" onclick="return false;" v-show="a != null" v-if="a != null" v-model="a.isActive"></td>
+
+						@*<td><input type="checkbox" onclick="return false;" disabled readonly v-show="a != null" v-if="a != null" v-model="a.isActive" ></td>*@
+						@*<td>{{a.isActive}}</td>*@
+						@*<td>{{a.createdDate}}</td>
+						<td>{{a.createdBy}}</td>
+						<td>{{a.modifiedDate}}</td>
+						<td>{{a.modifiedBy}}</td>*@
+					</tr>
+				</table>
+
+			</div>
+		</div>
+
+	</div>
+
+	<div id="overlaySearch" style="display:none">
+		<div id="overlaySearch1" class="margin">
+			<input id="closeImage" class="imageSize" type="image" src="/css/close.jpg" style="float: right" onclick="Model.SearchCloseImage()" />
+			<br />
+		</div>
+	</div>
+
+	<div id="overlay" style="display:none">
+
+		<div class="margin">
+			<input id="selectAll" name="selectAll" style="width:25px" type="checkbox" value="selectAll" onclick="Model.SelectAllCriteria(this)">
+			<label for="selectAll" style="width:150px; text-align:left">Select All</label>
+			<input id="closeImage" class="imageSize" type="image" src="/css/close.jpg" style="float: right" onclick="Model.CloseImage()" />
+		</div>
+
+		<div id="scrollbox" class="scrolldiv" style="width:325px; height:200px">
+			<div class="checkitem"><input name="checkitem" style="width:25px" type="checkbox" value="1"><label style="width:150px; text-align:left">Division 1</label></div>
+			<div class="checkitem"><input name="checkitem" style="width:25px" type="checkbox" value="2"><label style="width:150px; text-align:left">Division 2</label></div>
+			<div class="checkitem"><input name="checkitem" style="width:25px" type="checkbox" value="3"><label style="width:150px; text-align:left">Division 3</label></div>
+
+			@*<div class="checkitem"><input name="checkitem" style="width:25px" type="checkbox" value="1">Division 1</div>
+			<div class="checkitem"><input name="checkitem" style="width:25px" type="checkbox" value="2">Division 2</div>
+			<div class="checkitem"><input name="checkitem" style="width:25px" type="checkbox" value="3">Division 3</div>*@
+		</div>
+
+		<div id="searchCriteriaBlock" class="margin">
+			<label name="searchCriteria" style="width:300px; text-align:left">Show items with value that:</label>
+
+			<br name="searchCriteria" />
+			<select id="searchCriteria" name="searchCriteria" style="height:30px">
+				<option value="IsEqualTo">Is equal to</option>
+				<option value="IsNotEqualTo">Is not equal to</option>
+				<option value="Contains">Contains</option>
+				<option value="DoesNotContain">Does not contain</option>
+				<option value="StartsWith">Starts with</option>
+				<option value="EndsWith">Ends with</option>
+				<option value="IsEmpty">Is empty</option>
+				<option value="IsNotEmpty">Is not empty</option>
+			</select>
+
+			<br name="searchCriteria" />
+			<input id="btnAddSearchCriteria" name="searchCriteria" class="btn btn-primary" style="width:40px; text-align:center" type="button" value="+" onclick="Model.CriteriaAdd()" />
+			<input id="searchText" name="searchCriteria" class="searchTextSize" type="text">
+			<input id="btnRemoveSearchCriteria" name="searchCriteria" class="btn btn-primary" style="width:40px; text-align:center" type="button" value="-" onclick="Model.CriteriaRemove()" />
+
+			<br name="searchCriteria" />
+			<select id="searchConjunctionCriteria" name="searchCriteria" style="margin-top:5px; margin-bottom:5px; height:30px">
+				<option value="Or">Or</option>
+				<option value="And">And</option>
+			</select>
+
+			<br name="searchCriteria" />
+			<select id="searchCriteria1" name="searchCriteria" style="height:30px">
+				<option value="IsEqualTo">Is equal to</option>
+				<option value="IsNotEqualTo">Is not equal to</option>
+				<option value="Contains">Contains</option>
+				<option value="DoesNotContain">Does not contain</option>
+				<option value="StartsWith">Starts with</option>
+				<option value="EndsWith">Ends with</option>
+				<option value="IsEmpty">Is empty</option>
+				<option value="IsNotEmpty">Is not empty</option>
+			</select>
+
+			<br name="searchCriteria" />
+			<input id="btnAddSearchCriteria1" name="searchCriteria" class="btn btn-primary" style="width:40px; text-align:center" type="button" value="+" onclick="Model.CriteriaAdd()" />
+			<input id="searchText1" name="searchCriteria" class="searchTextSize" type="text">
+			<input id="btnRemoveSearchCriteria1" name="searchCriteria" class="btn btn-primary" style="width:40px; text-align:center" type="button" value="-" onclick="Model.CriteriaRemove()" />
+
+			<br name="searchCriteria" />
+			<br name="searchCriteria" />
+			<input id="btnFilter" name="searchCriteria" class="btn btn-primary" type="button" style="width:100px" value="Filter" onclick="Model.FilterCriteria()" />
+			<input id="btnClear" name="searchCriteria" class="btn btn-primary" type="button" style="width:100px; float:right" value="Clear" onclick="Model.ClearCriteria()" />
+			@*<input id="btnClear" name="searchCriteria" class="btn btn-primary" type="button" style="position:absolute; width:100px; left:116px; top:454px" value="Clear" onclick="Model.ClearCriteria()" />*@
+			@*<input id="btnAllClear" name="searchCriteria" class="btn btn-primary" type="button" style="width:100px; float: right" value="Clear All" onclick="Model.ClearAllCriteria()" />*@
+
+		</div>
+	</div>
+
+	<script>
+
+		//var a = sessionStorage.getItem("lastname");
+		//var a = localStorage.getItem("lastname");
+		//alert(a);
+
+		//Model.Login();
+
+		//Model.ListenMessage();
+		//Model.SendMessage();
+						
+		//Model.DocumentVisibilityChange();
+		Model.WindowBeforeUnload();
+		Model.WindowOnscroll();
+
+		Model.CalculateDashboard();
+		Model.AddPeopleSkill();
+		Model.UpdatePeopleSkill();
+		Model.ViewPeopleSkill();
+		Model.ViewPeople();
+		Model.ViewProductTask();
+		Model.AddFunctionTask();
+		Model.UpdateFunctionTask();
+		Model.ViewFunctionTask();
+		Model.Add();
+		Model.Update();
+		Model.View();
+	</script>
+</body>
+
+</html>
